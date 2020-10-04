@@ -1,3 +1,9 @@
+Учебный проект на платформе Яндекс-Практикум.
+Автор - Юрий Папков.
+Функциональность реализована при помощи функциональных компонентов React
+с использованием хуков useState и useEffect.
+https://YuryPapkov.github.io/mesto-react
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -16,7 +16,6 @@ Promise.all(dataDownload)
     .then((data) => {
         const userData = data[0];
         setCards(data[1]);
-        //console.log(cards);
         setUserName(userData.name);
         setUserDescription(userData.about);
         setUserAvatar(userData.avatar);
@@ -28,16 +27,16 @@ Promise.all(dataDownload)
             <img src={userAvatar}  alt="фото профиля" className="profile__avatar" onClick={onEditAvatar}/>
             <div className="profile__info">
               <h1 className="profile__name">{userName}</h1>
-              <button className="button profile__edit-button" type="button" aria-label="Редактировать профиль" onClick={onEditProfile}></button>
+              <button className="button profile__edit-button" type="button" aria-label="Редактировать профиль" onClick={onEditProfile}/>
               <p className="profile__occupation">{userDescription}</p>
             </div>
-            <button className="button profile__add-button" type="button" aria-label="Добавить" onClick={onAddPlace}></button>
+            <button className="button profile__add-button" type="button" aria-label="Добавить" onClick={onAddPlace}/>
 
           </section>
           <section>
             <ul className="cards">
               {cards.map((item)=>(
-              <Card card={item} onCardClick={onCardClick}/>
+              <Card key={item._id} card={item} onCardClick={onCardClick}/>
               ))}
             </ul>
           </section>
