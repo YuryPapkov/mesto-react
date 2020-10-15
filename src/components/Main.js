@@ -3,48 +3,40 @@ import CurrentUserContext  from '../contexts/CurrentUserContext';
 import api from '../utils/Api.js';
 import Card from './Card';
 
-function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
+function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete}) {
   const currentUser= React.useContext(CurrentUserContext);
-    // const [userName, setUserName]=React.useState('');
-    // const [userDescription, setUserDescription]=React.useState('');
-    // const [userAvatar, setUserAvatar]=React.useState('');
-    const [cards, setCards]=React.useState([]);
-React.useEffect(()=>{
-    const userFromServer = api.userDownload();
-    const cardsFromServer = api.cardsDownload();
+    //const [cards, setCards]=React.useState([]);
+// React.useEffect(()=>{
+//     const userFromServer = api.userDownload();
+//     const cardsFromServer = api.cardsDownload();
 
-    const dataDownload = [userFromServer, cardsFromServer];
-Promise.all(dataDownload)
-    .then((data) => {
-        const userData = data[0];
-        setCards(data[1]);
-        // setUserName(userData.name);
-        // setUserDescription(userData.about);
-        // setUserAvatar(userData.avatar);
-    });
-  },[]);
-  function handleCardLike  (card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    //console.log(card, isLiked);
-    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
-      console.log(newCard);
-      const newCards = cards.map((c) => c._id === card._id ? newCard : c);
-      setCards(newCards);
-    });
-} ;
-function handleCardDelete  (card) {
-  const isOwn = card.owner._id === currentUser._id;
-  if(isOwn) {
-    api.deleteCard(card._id)
-    .then(()=>{
-    const newCards = cards.filter((c) => {
-      return(c._id !== card._id);
-    });
-    setCards(newCards);
-  });
-  }
-} ;
-//
+//     const dataDownload = [userFromServer, cardsFromServer];
+// Promise.all(dataDownload)
+//     .then((data) => {
+//         const userData = data[0];
+//         setCards(data[1]);
+//     });
+//   },[]);
+//   function handleCardLike  (card) {
+//     const isLiked = card.likes.some(i => i._id === currentUser._id);
+//     api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+//       console.log(newCard);
+//       const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+//       setCards(newCards);
+//     });
+// } ;
+// function handleCardDelete  (card) {
+//   const isOwn = card.owner._id === currentUser._id;
+//   if(isOwn) {
+//     api.deleteCard(card._id)
+//     .then(()=>{
+//     const newCards = cards.filter((c) => {
+//       return(c._id !== card._id);
+//     });
+//     setCards(newCards);
+//   });
+//   }
+// } ;
     return (
         <main className="content">
           <section className="profile">
@@ -64,8 +56,8 @@ function handleCardDelete  (card) {
               key={item._id}
               card={item}
               onCardClick={onCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}/>
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}/>
               ))}
             </ul>
           </section>

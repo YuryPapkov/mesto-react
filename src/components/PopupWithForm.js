@@ -1,12 +1,16 @@
 import React from 'react';
 import closeButtonPath from '../images/close-icon.svg';
 
-function PopupWithForm({title,name,submitText, isOpen, onClose, children}) {
+function PopupWithForm({title,name,submitText, isOpen, onClose, onSubmit, children}) {
     const className=`popup popup_type_${name} ${isOpen&& 'popup_opened'}`;
     //console.log(children);
     return (
         <div className={className}>
-          <form name={name} action="#" className="popup__container popup__container_type_input" noValidate>
+          <form
+            name={name}
+            onSubmit={onSubmit}
+            className="popup__container popup__container_type_input"
+            noValidate>
             <p className="popup__text">{title}</p>
             {children}
             <button type="submit" className="button popup__save-button">{submitText}</button>
