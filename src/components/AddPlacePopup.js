@@ -1,61 +1,77 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
-import CurrentUserContext  from '../contexts/CurrentUserContext';
+import { Validator, validationConfig } from '../utils/Validator';
 
-function AddPlacePopup({isOpen, onClose, onAddPlace}) {
-  //const currentUser= React.useContext(CurrentUserContext);
-  const [title, setTitle]=React.useState('');
-  const [link, setLink]=React.useState('');
+function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+  const [title, setTitle] = React.useState('');
+  const [link, setLink] = React.useState('');
+  const validatorRef = React.useRef();
+  const [submitButtonText, setSubmitButtonText] = React.useState('Сохранить');
 
-  function handleTitleInput (e){
+  React.useEffect(() => {
+    setSubmitButtonText('Сохранить');
+  }, [isOpen, setSubmitButtonText]);
+
+  React.useEffect(() => {
+    const form = document.querySelector('form[name="new-card"]');
+    validatorRef.current = new Validator(validationConfig, form);
+    validatorRef.current.enableValidation();
+  }, []);
+
+  function handleTitleInput(e) {
     setTitle(e.target.value);
   }
-  function handleLinkInput(e){
+  function handleLinkInput(e) {
     setLink(e.target.value);
   }
-  function handleSubmit(e){
+  function handleSubmit(e) {
+    setSubmitButtonText('Сохранение...');
+    setTitle('');
+    setLink('');
     e.preventDefault();
     onAddPlace(title, link);
   }
-  // React.useEffect(() => {
-  //   setName(currentUser.name);
-  //   setDescription(currentUser.about);
-  // }, [currentUser]);
-return(
-<PopupWithForm
-          title="Новое место"
-          name="new-card"
-          submitText="Сохранить"
-          isOpen={isOpen}
-          onClose={onClose}
-          onSubmit={handleSubmit}
-        >
-          <input
-            value={title}
-            onInput={handleTitleInput}
-            name="place"
-            className="popup__input popup__input_type_place"
-            type="text"
-            placeholder="название"
-            required
-            minLength="1"
-            maxLength="30"
-            autoComplete="off"
-          />
-          <span className="popup__error popup__error_type_place"></span>
-          <input
-            value={link}
-            onInput={handleLinkInput}
-            name="link"
-            className="popup__input popup__input_type_link"
-            type="url"
-            required
-            placeholder="ссылка на картинку"
-            autoComplete="off"
-          />
-          <span className="popup__error popup__error_type_link"></span>
-        </PopupWithForm>
+  function handleClose() {
+    setTitle('');
+    setLink('');
+    validatorRef.current.clearErrors();
+    onClose();
+  }
+  return (
+    <PopupWithForm
+      title="Новое место"
+      name="new-card"
+      submitText={submitButtonText}
+      isOpen={isOpen}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
+    >
+      <input
+        value={title}
+        onChange={handleTitleInput}
+        name="place"
+        className="popup__input popup__input_type_place"
+        type="text"
+        placeholder="название"
+        required
+        minLength="1"
+        maxLength="30"
+        autoComplete="off"
+      />
+      <span className="popup__error popup__error_type_place"></span>
+      <input
+        value={link}
+        onChange={handleLinkInput}
+        name="link"
+        className="popup__input popup__input_type_link"
+        type="url"
+        required
+        placeholder="ссылка на картинку"
+        autoComplete="off"
+      />
+      <span className="popup__error popup__error_type_link"></span>
+    </PopupWithForm>
 
-)
+  )
 }
 export default AddPlacePopup;

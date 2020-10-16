@@ -1,39 +1,53 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
-//import CurrentUserContext  from '../contexts/CurrentUserContext';
+import { Validator, validationConfig } from '../utils/Validator';
 
-function EditAvatarPopup({isOpen, onClose, onUpdateAvatar}) {
-  const avatarRef=React.useRef();
-  //const currentUser= React.useContext(CurrentUserContext);
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+  const avatarRef = React.useRef();
+  const validatorRef = React.useRef();
+  const [submitButtonText, setSubmitButtonText] = React.useState('Сохранить');
 
-  function handleSubmit(e){
+  React.useEffect(() => {
+    setSubmitButtonText('Сохранить');
+  }, [isOpen, setSubmitButtonText]);
+
+  React.useEffect(() => {
+    const form = document.forms.avatar;
+    validatorRef.current = new Validator(validationConfig, form);
+    validatorRef.current.enableValidation();
+  }, []);
+
+  function handleSubmit(e) {
+    setSubmitButtonText('Сохранение...');
     e.preventDefault();
     onUpdateAvatar(avatarRef.current.value);
   }
-  // React.useEffect(() => {
-  //   setName(currentUser.name);
-  //   setDescription(currentUser.about);
-  // }, [currentUser]);
-return(
-<PopupWithForm
-          title="Обновить аватар"
-          name="avatar"
-          submitText="Сохранить"
-          onClose={onClose}
-          onSubmit={handleSubmit}
-          isOpen={isOpen}
-        >
-          <input
-            ref={avatarRef}
-            name="link"
-            className="popup__input popup__input_type_link"
-            type="url"
-            required
-            placeholder="ссылка на картинку"
-            autoComplete="off"
-          />
-          <span className="popup__error popup__error_type_link"></span>
-        </PopupWithForm>
-)
+  function handleClose() {
+    avatarRef.current = '';
+    validatorRef.current.clearErrors();
+    onClose();
+  }
+
+  return (
+    <PopupWithForm
+      title="Обновить аватар"
+      name="avatar"
+      submitText={submitButtonText}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
+      isOpen={isOpen}
+    >
+      <input
+        ref={avatarRef}
+        name="link"
+        className="popup__input popup__input_type_link"
+        type="url"
+        required
+        placeholder="ссылка на картинку"
+        autoComplete="off"
+      />
+      <span className="popup__error popup__error_type_link"></span>
+    </PopupWithForm>
+  )
 }
 export default EditAvatarPopup;
