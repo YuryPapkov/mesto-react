@@ -3,7 +3,6 @@ import closeButtonPath from '../images/close-icon.svg';
 
 function PopupWithForm({title,name,submitText, isOpen, onClose, onSubmit, children}) {
     const className=`popup popup_type_${name} ${isOpen&& 'popup_opened'}`;
-    //console.log(children);
     return (
         <div className={className}>
           <form

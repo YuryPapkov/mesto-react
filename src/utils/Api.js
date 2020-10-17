@@ -99,7 +99,6 @@
 
      changeLikeCardStatus(id, isLiked){
        const cardLikeURL = (this._cardsURL + `/likes/${id}`);
-       console.log(cardLikeURL);
       if(isLiked){
          return fetch(cardLikeURL, {
                  method: 'DELETE',

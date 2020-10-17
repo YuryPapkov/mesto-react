@@ -10,7 +10,9 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
   React.useEffect(() => {
     setSubmitButtonText('Сохранить');
-  }, [isOpen, setSubmitButtonText]);
+    setTitle('');
+    setLink('');
+  }, [isOpen, setSubmitButtonText, setTitle, setLink]);
 
   React.useEffect(() => {
     const form = document.querySelector('form[name="new-card"]');
@@ -26,14 +28,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   }
   function handleSubmit(e) {
     setSubmitButtonText('Сохранение...');
-    setTitle('');
-    setLink('');
     e.preventDefault();
     onAddPlace(title, link);
   }
   function handleClose() {
-    setTitle('');
-    setLink('');
     validatorRef.current.clearErrors();
     onClose();
   }

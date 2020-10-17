@@ -22,6 +22,10 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     setSubmitButtonText('Сохранить');
   }, [currentUser]);
 
+  React.useEffect(() => {
+    setSubmitButtonText('Сохранить');
+  }, [isOpen]);
+
   function handleNameInput(e) {
     setName(e.target.value);
   }
