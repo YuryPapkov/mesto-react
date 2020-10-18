@@ -15,6 +15,9 @@ import ErrorPopup from './ErrorPopup';
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  //Поднимаю стейт с текстом кнопки сабмита, чтобы иметь возможность возвратить ее в исходное
+  //состояние при ошибке загрузки новой карточки (не сбрасывая поля ввода на форме)
+  const [addPlacePopupSubmitButtonText, setAddPlacePopupSubmitButtonText] = React.useState('Сохранить');
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
@@ -68,6 +71,8 @@ function App() {
         })
         .catch((err) => {
           setErrorMessage('Не удалось удалить карточку');
+          setIsConfirmPopupOpen(false); //Закрытие и повторное открытие окна сбрасывает
+          setIsConfirmPopupOpen(true);  // текст кнопки сабмита на исходный
           setTimeout(()=>{setErrorMessage('')}, 2000);
         });
     }
@@ -105,9 +110,9 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => {
-        setErrorMessage('Ошибка связи с сервером')
-        setIsEditProfilePopupOpen(false);
-        setIsEditProfilePopupOpen(true);
+        setErrorMessage('Не удалось обновить данные на сервере')
+        setIsEditProfilePopupOpen(false);//Закрытие и повторное открытие окна сбрасывает
+        setIsEditProfilePopupOpen(true); // текст кнопки сабмита на исходный
         setTimeout(()=>{setErrorMessage('')}, 2000);
 
       });
@@ -120,14 +125,15 @@ function handleUpdateAvatar(link) {
       closeAllPopups();
     })
     .catch((err) => {
-      setErrorMessage('Ошибка связи с сервером');
-      setIsEditAvatarPopupOpen(false);
-      setIsEditAvatarPopupOpen(true);
+      setErrorMessage('Не удалось обновить фото профиля');
+      setIsEditAvatarPopupOpen(false); //Закрытие и повторное открытие окна сбрасывает
+      setIsEditAvatarPopupOpen(true);  // текст кнопки сабмита на исходный
       setTimeout(()=>{setErrorMessage('')}, 2000);
     })
 }
 
 function handleAddPlaceSubmit(title, link) {
+  setAddPlacePopupSubmitButtonText('Сохранение...')
   api.newCardUpload(title, link)
     .then((res) => {
       setCards([res, ...cards]);
@@ -135,10 +141,11 @@ function handleAddPlaceSubmit(title, link) {
     })
     .catch((err) => {
       setErrorMessage('Ошибка связи с сервером');
-      setIsAddPlacePopupOpen(false);
-      setIsAddPlacePopupOpen(true);
       setTimeout(()=>{setErrorMessage('')}, 2000);
     })
+    .finally(()=>{
+      setAddPlacePopupSubmitButtonText('Сохранить');
+    });
 }
 
 return (
@@ -163,6 +170,7 @@ return (
 
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
+          submitButtonText={addPlacePopupSubmitButtonText}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit} />
 

@@ -2,17 +2,21 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 import { Validator, validationConfig } from '../utils/Validator';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({ isOpen, submitButtonText, onClose, onAddPlace }) {
   const [title, setTitle] = React.useState('');
   const [link, setLink] = React.useState('');
   const validatorRef = React.useRef();
-  const [submitButtonText, setSubmitButtonText] = React.useState('Сохранить');
+  //const [submitButtonText, setSubmitButtonText] = React.useState('Сохранить');
 
   React.useEffect(() => {
-    setSubmitButtonText('Сохранить');
+    //Сейчас у меня при ошибке сохранения карточки обнуляются поля ввода, что мне кажется неверно.
+    //Так как единственный способ вернуть кнопку сабмита в исходное состояние - это закрыть и открыть попап.
+    //Выход из этой проблемы я вижу в поднятии стейта submitButtonState на уровень App и управлять
+    //этим стейтом в обработчике
+    //setSubmitButtonText('Сохранить');
     setTitle('');
     setLink('');
-  }, [isOpen, setSubmitButtonText, setTitle, setLink]);
+  }, [isOpen, setTitle, setLink]);
 
   React.useEffect(() => {
     const form = document.querySelector('form[name="new-card"]');
@@ -27,7 +31,6 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     setLink(e.target.value);
   }
   function handleSubmit(e) {
-    setSubmitButtonText('Сохранение...');
     e.preventDefault();
     onAddPlace(title, link);
   }
