@@ -6,14 +6,8 @@ function AddPlacePopup({ isOpen, submitButtonText, onClose, onAddPlace }) {
   const [title, setTitle] = React.useState('');
   const [link, setLink] = React.useState('');
   const validatorRef = React.useRef();
-  //const [submitButtonText, setSubmitButtonText] = React.useState('Сохранить');
 
   React.useEffect(() => {
-    //Сейчас у меня при ошибке сохранения карточки обнуляются поля ввода, что мне кажется неверно.
-    //Так как единственный способ вернуть кнопку сабмита в исходное состояние - это закрыть и открыть попап.
-    //Выход из этой проблемы я вижу в поднятии стейта submitButtonState на уровень App и управлять
-    //этим стейтом в обработчике
-    //setSubmitButtonText('Сохранить');
     setTitle('');
     setLink('');
   }, [isOpen, setTitle, setLink]);

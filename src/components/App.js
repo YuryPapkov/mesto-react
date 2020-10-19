@@ -15,9 +15,11 @@ import ErrorPopup from './ErrorPopup';
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
   //Поднимаю стейт с текстом кнопки сабмита, чтобы иметь возможность возвратить ее в исходное
   //состояние при ошибке загрузки новой карточки (не сбрасывая поля ввода на форме)
   const [addPlacePopupSubmitButtonText, setAddPlacePopupSubmitButtonText] = React.useState('Сохранить');
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
@@ -51,7 +53,6 @@ function App() {
         setTimeout(()=>{setErrorMessage('')}, 2000);
       });
   }
-
 
   function handleCardDelete(card) {
     setIsConfirmPopupOpen(true);
