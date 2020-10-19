@@ -38,6 +38,10 @@ function App() {
       .then(([user, cards]) => {
         setCurrentUser(user);
         setCards(cards);
+      })
+      .catch((err) => {
+        setErrorMessage('Не удалось загрузить данные');
+        setTimeout(() => { setErrorMessage('') }, 2000);
       });
   }, []);
 
@@ -50,7 +54,7 @@ function App() {
       })
       .catch((err) => {
         setErrorMessage('Ошибка связи с сервером');
-        setTimeout(()=>{setErrorMessage('')}, 2000);
+        setTimeout(() => { setErrorMessage('') }, 2000);
       });
   }
 
@@ -74,7 +78,7 @@ function App() {
           setErrorMessage('Не удалось удалить карточку');
           setIsConfirmPopupOpen(false); //Закрытие и повторное открытие окна сбрасывает
           setIsConfirmPopupOpen(true);  // текст кнопки сабмита на исходный
-          setTimeout(()=>{setErrorMessage('')}, 2000);
+          setTimeout(() => { setErrorMessage('') }, 2000);
         });
     }
   }
@@ -114,91 +118,91 @@ function App() {
         setErrorMessage('Не удалось обновить данные на сервере')
         setIsEditProfilePopupOpen(false);//Закрытие и повторное открытие окна сбрасывает
         setIsEditProfilePopupOpen(true); // текст кнопки сабмита на исходный
-        setTimeout(()=>{setErrorMessage('')}, 2000);
+        setTimeout(() => { setErrorMessage('') }, 2000);
 
       });
   }
 
-function handleUpdateAvatar(link) {
-  api.avatarUpload({ link: link })
-    .then((res) => {
-      setCurrentUser(res);
-      closeAllPopups();
-    })
-    .catch((err) => {
-      setErrorMessage('Не удалось обновить фото профиля');
-      setIsEditAvatarPopupOpen(false); //Закрытие и повторное открытие окна сбрасывает
-      setIsEditAvatarPopupOpen(true);  // текст кнопки сабмита на исходный
-      setTimeout(()=>{setErrorMessage('')}, 2000);
-    })
-}
+  function handleUpdateAvatar(link) {
+    api.avatarUpload({ link: link })
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        setErrorMessage('Не удалось обновить фото профиля');
+        setIsEditAvatarPopupOpen(false); //Закрытие и повторное открытие окна сбрасывает
+        setIsEditAvatarPopupOpen(true);  // текст кнопки сабмита на исходный
+        setTimeout(() => { setErrorMessage('') }, 2000);
+      })
+  }
 
-function handleAddPlaceSubmit(title, link) {
-  setAddPlacePopupSubmitButtonText('Сохранение...')
-  api.newCardUpload(title, link)
-    .then((res) => {
-      setCards([res, ...cards]);
-      closeAllPopups();
-    })
-    .catch((err) => {
-      setErrorMessage('Ошибка связи с сервером');
-      setTimeout(()=>{setErrorMessage('')}, 2000);
-    })
-    .finally(()=>{
-      setAddPlacePopupSubmitButtonText('Сохранить');
-    });
-}
+  function handleAddPlaceSubmit(title, link) {
+    setAddPlacePopupSubmitButtonText('Сохранение...')
+    api.newCardUpload(title, link)
+      .then((res) => {
+        setCards([res, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        setErrorMessage('Ошибка связи с сервером');
+        setTimeout(() => { setErrorMessage('') }, 2000);
+      })
+      .finally(() => {
+        setAddPlacePopupSubmitButtonText('Сохранить');
+      });
+  }
 
-return (
-  <CurrentUserContext.Provider value={currentUser}>
-    <div className="App">
-      <div className="body">
-        <Header />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-        <Footer />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser} />
+  return (
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <div className="body">
+          <Header />
+          <Main
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
+          <Footer />
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser} />
 
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          submitButtonText={addPlacePopupSubmitButtonText}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit} />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            submitButtonText={addPlacePopupSubmitButtonText}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit} />
 
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
 
-        <ConfirmPopup
-          isOpen={isConfirmPopupOpen}
-          onClose={closeAllPopups}
-          onConfirm={handleDeleteCardConfirmation}
-        />
+          <ConfirmPopup
+            isOpen={isConfirmPopupOpen}
+            onClose={closeAllPopups}
+            onConfirm={handleDeleteCardConfirmation}
+          />
 
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-        />
-        <ErrorPopup
-          message={errorMessage}
-        />
+          <ImagePopup
+            card={selectedCard}
+            onClose={closeAllPopups}
+          />
+          <ErrorPopup
+            message={errorMessage}
+          />
 
+        </div>
       </div>
-    </div>
-  </CurrentUserContext.Provider>
-);
+    </CurrentUserContext.Provider>
+  );
 }
 
 export default App;
